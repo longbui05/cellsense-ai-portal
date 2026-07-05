@@ -1,0 +1,103 @@
+Table users {
+  id int [pk, increment]
+  username varchar(100) [not null]
+  email varchar(150) [unique]
+  password varchar(255)
+  role enum('admin','user')
+  avatar varchar(255)
+  created_at datetime
+}
+
+Table brands {
+  id int [pk, increment]
+  name varchar(100)
+  country varchar(100)
+  logo varchar(255)
+  description text
+}
+
+Table phones {
+  id int [pk, increment]
+  brand_id int
+  model varchar(150)
+  price decimal(10,2)
+  processor varchar(150)
+  ram varchar(50)
+  storage varchar(50)
+  camera varchar(100)
+  battery varchar(100)
+  display_screen varchar(100)
+  os varchar(100)
+  image varchar(255)
+  description text
+  release_year int
+  stock int
+  created_at datetime
+}
+
+Table reviews {
+  id int [pk, increment]
+  user_id int
+  phone_id int
+  rating int
+  comment text
+  sentiment varchar(20)
+  created_at datetime
+}
+
+Table favorites {
+  id int [pk, increment]
+  user_id int
+  phone_id int
+  created_at datetime
+}
+
+Table search_history {
+  id int [pk, increment]
+  user_id int
+  keyword varchar(255)
+  created_at datetime
+}
+
+Table recommendations {
+  id int [pk, increment]
+  user_id int
+  phone_id int
+  score decimal(5,2)
+  reason text
+  created_at datetime
+}
+
+Table price_history {
+  id int [pk, increment]
+  phone_id int
+  price decimal(10,2)
+  recorded_at datetime
+}
+
+Table comparisons {
+  id int [pk, increment]
+  user_id int
+  phone1_id int
+  phone2_id int
+  created_at datetime
+}
+
+Ref: phones.brand_id > brands.id
+
+Ref: reviews.user_id > users.id
+Ref: reviews.phone_id > phones.id
+
+Ref: favorites.user_id > users.id
+Ref: favorites.phone_id > phones.id
+
+Ref: search_history.user_id > users.id
+
+Ref: recommendations.user_id > users.id
+Ref: recommendations.phone_id > phones.id
+
+Ref: price_history.phone_id > phones.id
+
+Ref: comparisons.user_id > users.id
+Ref: comparisons.phone1_id > phones.id
+Ref: comparisons.phone2_id > phones.id

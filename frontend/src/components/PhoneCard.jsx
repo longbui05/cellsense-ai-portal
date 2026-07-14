@@ -1,6 +1,37 @@
 import { Link } from "react-router-dom";
 
 function PhoneCard({ phone }) {
+    const handleCompare = () => {
+
+  let comparePhones =
+    JSON.parse(localStorage.getItem("comparePhones")) || [];
+
+  if (comparePhones.find((item) => item.id === phone.id)) {
+
+    alert("Điện thoại này đã được chọn.");
+
+    return;
+
+  }
+
+  if (comparePhones.length >= 2) {
+
+    alert("Chỉ được chọn tối đa 2 điện thoại.");
+
+    return;
+
+  }
+
+  comparePhones.push(phone);
+
+  localStorage.setItem(
+    "comparePhones",
+    JSON.stringify(comparePhones)
+  );
+
+  alert("Đã thêm vào danh sách so sánh.");
+
+};
   return (
     <div className="col-md-4 mb-4">
       <div className="card h-100 shadow">
@@ -30,12 +61,25 @@ function PhoneCard({ phone }) {
 
           <p>Chip: {phone.processor}</p>
 
-          <Link
+          <div className="d-flex gap-2">
+
+        <Link
             to={`/phone/${phone.id}`}
             className="btn btn-primary"
-          >
+        >
             Xem chi tiết
-          </Link>
+        </Link>
+
+        <button
+    className="btn btn-success"
+    onClick={() => {
+        handleCompare();
+    }}
+>
+    So sánh
+</button>
+
+</div>
 
         </div>
 
@@ -43,5 +87,6 @@ function PhoneCard({ phone }) {
     </div>
   );
 }
+
 
 export default PhoneCard;

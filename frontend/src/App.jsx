@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 import PhoneDetail from "./pages/PhoneDetail";
+import Compare from "./pages/Compare";
+import AdminLogin from "./pages/AdminLogin";
+import Admin from "./pages/Admin";
+import AddPhone from "./pages/AddPhone";
 
 function Home() {
   const [phones, setPhones] = useState([]);
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("All");
+
+
 
   useEffect(() => {
     axios
@@ -21,15 +27,19 @@ function Home() {
   }, []);
 
   const filteredPhones = phones.filter((phone) => {
+    
     const matchSearch = phone.model
       .toLowerCase()
       .includes(search.toLowerCase());
 
     const matchBrand =
       brand === "All" || phone.brand === brand;
+        
 
     return matchSearch && matchBrand;
   });
+  
+
 
   return (
     <div>
@@ -91,9 +101,9 @@ function Home() {
 
           {filteredPhones.map((phone) => (
             <PhoneCard
-              key={phone.id}
-              phone={phone}
-            />
+            key={phone.id}
+            phone={phone}
+          />
           ))}
 
         </div>
@@ -105,7 +115,21 @@ function Home() {
 
 function App() {
   return (
+    
     <Routes>
+      <Route
+    path="/admin/add-phone"
+    element={<AddPhone />}
+/>
+      <Route
+    path="/admin-login"
+    element={<AdminLogin />}
+/>
+
+<Route
+    path="/admin"
+    element={<Admin />}
+/>
 
       <Route
         path="/"
@@ -115,6 +139,11 @@ function App() {
       <Route
         path="/phone/:id"
         element={<PhoneDetail />}
+      />
+
+      <Route
+        path="/compare"
+        element={<Compare />}
       />
 
     </Routes>

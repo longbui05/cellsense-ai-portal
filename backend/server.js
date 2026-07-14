@@ -6,6 +6,7 @@ const express = require("express");
 const cors = require("cors");
 
 const phoneRoutes = require("./routes/phoneRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use("/api/phones", phoneRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req,res)=>{
 

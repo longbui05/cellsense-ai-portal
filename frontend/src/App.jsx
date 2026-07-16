@@ -7,6 +7,7 @@ import Compare from "./pages/Compare";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import AddPhone from "./pages/AddPhone";
+import EditPhone from "./pages/EditPhone";
 
 function Home() {
   const [phones, setPhones] = useState([]);
@@ -120,6 +121,10 @@ function App() {
       <Route
     path="/admin/add-phone"
     element={<AddPhone />}
+/>
+<Route
+    path="/admin/edit-phone/:id"
+    element={<EditPhone />}
 />
       <Route
     path="/admin-login"

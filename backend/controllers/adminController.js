@@ -53,7 +53,24 @@ const getPhones = (req, res) => {
 };
 const addPhone = (req, res) => {
 
-    Phone.addPhone(req.body, (err, result) => {
+    const phone = {
+
+        brand_id: req.body.brand_id,
+        model: req.body.model,
+        price: req.body.price,
+        processor: req.body.processor,
+        ram: req.body.ram,
+        storage: req.body.storage,
+        camera: req.body.camera,
+        battery: req.body.battery,
+        display_screen: req.body.display_screen,
+        os: req.body.os,
+        image: req.file.filename,
+        description: req.body.description
+
+    };
+
+    Phone.addPhone(phone, (err) => {
 
         if (err) {
 
@@ -71,10 +88,72 @@ const addPhone = (req, res) => {
 
 };
 
+const updatePhone = (req, res) => {
+
+    const id = req.params.id;
+
+    const phone = {
+
+        brand_id: req.body.brand_id,
+        model: req.body.model,
+        price: req.body.price,
+        processor: req.body.processor,
+        ram: req.body.ram,
+        storage: req.body.storage,
+        camera: req.body.camera,
+        battery: req.body.battery,
+        display_screen: req.body.display_screen,
+        os: req.body.os,
+        image: req.file ? req.file.filename : req.body.image,
+        description: req.body.description
+
+    };
+
+    Phone.updatePhone(id, phone, (err) => {
+
+        if (err) {
+
+            return res.status(500).json(err);
+
+        }
+
+        res.json({
+
+            message: "Cập nhật thành công"
+
+        });
+
+    });
+
+};
+const deletePhone = (req, res) => {
+
+    const id = req.params.id;
+
+    Phone.deletePhone(id, (err) => {
+
+        if (err) {
+
+            return res.status(500).json(err);
+
+        }
+
+        res.json({
+
+            message: "Xóa thành công"
+
+        });
+
+    });
+
+};
+
 module.exports = {
 
     login,
     getPhones,
-    addPhone
+    addPhone,
+    updatePhone,
+    deletePhone
 
 };

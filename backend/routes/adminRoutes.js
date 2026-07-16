@@ -11,7 +11,15 @@ router.post(
     upload.single("image"),
     adminController.addPhone
 );
+router.put(
+    "/phones/:id",
+    upload.single("image"),
+    adminController.updatePhone
+);
+router.delete(
+    "/phones/:id",
+    adminController.deletePhone
+);
 router.get("/phones", adminController.getPhones);
-router.post("/phones", adminController.addPhone);
 
 module.exports = router;

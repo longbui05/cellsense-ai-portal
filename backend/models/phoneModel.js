@@ -70,10 +70,62 @@ const addPhone = (phone, callback) => {
 
 };
 
+const updatePhone = (id, phone, callback) => {
+
+    const sql = `
+        UPDATE phones
+        SET
+            brand_id=?,
+            model=?,
+            price=?,
+            processor=?,
+            ram=?,
+            storage=?,
+            camera=?,
+            battery=?,
+            display_screen=?,
+            os=?,
+            image=?,
+            description=?
+        WHERE id=?
+    `;
+
+    db.query(sql, [
+
+        phone.brand_id,
+        phone.model,
+        phone.price,
+        phone.processor,
+        phone.ram,
+        phone.storage,
+        phone.camera,
+        phone.battery,
+        phone.display_screen,
+        phone.os,
+        phone.image,
+        phone.description,
+        id
+
+    ], callback);
+
+};
+const deletePhone = (id, callback) => {
+
+    const sql = `
+        DELETE FROM phones
+        WHERE id = ?
+    `;
+
+    db.query(sql, [id], callback);
+
+};
+
 module.exports = {
 
     getAllPhones,
+    getPhoneById,
     addPhone,
-    getPhoneById
+    updatePhone,
+    deletePhone
 
 };

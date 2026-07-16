@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -19,6 +20,39 @@ function Admin() {
         });
 
     }, []);
+
+    const handleDelete = (id) => {
+
+    if (!window.confirm("Bạn có chắc muốn xóa?")) {
+
+        return;
+
+    }
+
+    axios
+        .delete(`http://localhost:5000/api/admin/phones/${id}`)
+        .then((res) => {
+
+            alert(res.data.message);
+
+            setPhones(
+
+                phones.filter(
+                    (phone) => phone.id !== id
+                )
+
+            );
+
+        })
+        .catch((err) => {
+
+            console.log(err);
+
+            alert("Xóa thất bại");
+
+        });
+
+};
 
     return (
 
@@ -44,12 +78,10 @@ function Admin() {
                     <tr>
 
                         <th>ID</th>
-
                         <th>Model</th>
-
                         <th>Brand</th>
-
                         <th>Price</th>
+                        <th>Thao tác</th>
 
                     </tr>
 
@@ -63,15 +95,33 @@ function Admin() {
 
                             <tr key={phone.id}>
 
-                                <td>{phone.id}</td>
+    <td>{phone.id}</td>
 
-                                <td>{phone.model}</td>
+    <td>{phone.model}</td>
 
-                                <td>{phone.brand}</td>
+    <td>{phone.brand}</td>
 
-                                <td>{phone.price}</td>
+    <td>{phone.price}</td>
 
-                            </tr>
+    <td>
+
+        <button
+            className="btn btn-warning me-2"
+            onClick={() => navigate(`/admin/edit-phone/${phone.id}`)}
+        >
+            Sửa
+        </button>
+
+        <button
+            className="btn btn-danger"
+            onClick={() => handleDelete(phone.id)}
+        >
+            Xóa
+        </button>
+
+    </td>
+
+</tr>
 
                         ))
 

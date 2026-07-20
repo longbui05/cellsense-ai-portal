@@ -6,7 +6,10 @@ const express = require("express");
 const cors = require("cors");
 
 const phoneRoutes = require("./routes/phoneRoutes");
+const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -19,7 +22,10 @@ app.use(
 );
 
 app.use("/api/phones", phoneRoutes);
+app.use("/api/auth", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/favorites", favoriteRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", (req,res)=>{
 

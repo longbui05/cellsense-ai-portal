@@ -1,20 +1,23 @@
 import PhoneCard from "./components/PhoneCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import PhoneDetail from "./pages/PhoneDetail";
 import Compare from "./pages/Compare";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import AddPhone from "./pages/AddPhone";
 import EditPhone from "./pages/EditPhone";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Favorite from "./pages/Favorite";
 
 function Home() {
   const [phones, setPhones] = useState([]);
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("All");
 
-
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     axios
@@ -39,66 +42,219 @@ function Home() {
 
     return matchSearch && matchBrand;
   });
+  const handleLogout = () => {
+
+    localStorage.removeItem("user");
+
+    window.location.reload();
+
+};
   
 
 
   return (
     <div>
-      <nav className="navbar navbar-dark bg-dark">
-        <div className="container">
-          <span className="navbar-brand">
-            CellSense AI Portal
-          </span>
-        </div>
-      </nav>
+      <nav
+    className="navbar navbar-expand-lg shadow-sm"
+    style={{
+        background: "#2563EB",
+        padding: "15px 0"
+    }}
+>
 
-      <div className="container mt-4">
+    <div className="container">
+
+        <Link
+            to="/"
+            className="navbar-brand fw-bold text-white"
+            style={{
+                fontSize: "28px"
+            }}
+        >
+            📱 CellSense AI
+        </Link>
+
+        <div className="ms-auto d-flex align-items-center gap-2">
+
+            <Link
+                to="/compare"
+                className="btn btn-light"
+            >
+                ⚖ Compare
+            </Link>
+
+            {
+
+                user ?
+
+                <>
+
+                    <Link
+                        to="/favorite"
+                        className="btn btn-outline-light"
+                    >
+                        ❤️ Favorite
+                    </Link>
+
+                    <span
+                        className="text-white fw-semibold"
+                    >
+                        Xin chào, {user.full_name}
+                    </span>
+
+                    <button
+                        className="btn btn-danger"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </button>
+
+                </>
+
+                :
+
+                <>
+
+                    <Link
+                        to="/login"
+                        className="btn btn-light"
+                    >
+                        Login
+                    </Link>
+
+                    <Link
+                        to="/register"
+                        className="btn btn-warning"
+                    >
+                        Register
+                    </Link>
+
+                </>
+
+            }
+
+        </div>
+
+    </div>
+
+</nav>
+<div
+    style={{
+        background:
+            "linear-gradient(135deg,#2563EB,#60A5FA)",
+        color: "white",
+        padding: "70px 0",
+        marginBottom: "40px"
+    }}
+>
+
+    <div className="container text-center">
+
+        <h1
+            className="fw-bold display-4"
+        >
+            Find Your Next Smartphone with AI
+        </h1>
+
+        <p
+            className="mt-3"
+            style={{
+                fontSize: "22px"
+            }}
+        >
+            AI-powered smartphone recommendation,
+            comparison and reviews.
+        </p>
+
+        <div className="mt-4">
+
+            <a
+                href="#phones"
+                className="btn btn-warning btn-lg me-3"
+            >
+                Explore Phones
+            </a>
+
+            <button
+    className="btn btn-light btn-lg"
+    onClick={() => alert("AI Assistant sẽ được cập nhật ở phiên bản tiếp theo.")}
+>
+    🤖 AI Assistant
+</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+      
+      <div
+    className="container"
+    id="phones"
+>
 
         <div className="mb-4">
-
+</div>
           <input
-            type="text"
-            className="form-control"
-            placeholder="Tìm điện thoại..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+    type="text"
+    className="form-control shadow-sm"
+    placeholder="🔍 Search smartphone..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    style={{
+        borderRadius: "15px",
+        height: "55px",
+        fontSize: "18px"
+    }}
+/>
 
-        </div>
+        <div className="row mb-5">
 
-        <div className="mb-4">
+    <div className="col-md-4">
 
-          <button
-            className="btn btn-secondary me-2"
-            onClick={() => setBrand("All")}
-          >
-            Tất cả
-          </button>
+        <select
+            className="form-select"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            style={{
+                height: "55px",
+                borderRadius: "15px",
+                border: "none",
+                boxShadow: "0 8px 25px rgba(0,0,0,.08)"
+            }}
+        >
+            <option value="All">All Brands</option>
+            <option value="Apple">Apple</option>
+            <option value="Samsung">Samsung</option>
+            <option value="Xiaomi">Xiaomi</option>
+        </select>
 
-          <button
-            className="btn btn-primary me-2"
-            onClick={() => setBrand("Apple")}
-          >
-            Apple
-          </button>
+    </div>
 
-          <button
-            className="btn btn-success me-2"
-            onClick={() => setBrand("Samsung")}
-          >
-            Samsung
-          </button>
+</div>
+<div className="mb-4">
 
-          <button
-            className="btn btn-warning"
-            onClick={() => setBrand("Xiaomi")}
-          >
-            Xiaomi
-          </button>
+    <h2
+        className="fw-bold"
+        style={{
+            fontSize: "38px"
+        }}
+    >
+        Latest Smartphones
+    </h2>
 
-        </div>
+    <p
+        style={{
+            color: "#666",
+            fontSize: "18px"
+        }}
+    >
+        Explore the latest smartphones with AI-powered recommendations.
+    </p>
 
-        <div className="row">
+</div>
+        <div className="row g-4">
 
           {filteredPhones.map((phone) => (
             <PhoneCard
@@ -150,6 +306,19 @@ function App() {
         path="/compare"
         element={<Compare />}
       />
+      <Route
+    path="/login"
+    element={<Login />}
+/>
+
+<Route
+    path="/register"
+    element={<Register />}
+/>
+<Route
+    path="/favorite"
+    element={<Favorite />}
+/>
 
     </Routes>
   );

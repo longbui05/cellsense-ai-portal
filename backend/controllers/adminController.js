@@ -87,6 +87,23 @@ const addPhone = (req, res) => {
     });
 
 };
+const getPhoneById = (req, res) => {
+
+    const id = req.params.id;
+
+    Phone.getPhoneById(id, (err, result) => {
+
+        if (err) {
+
+            return res.status(500).json(err);
+
+        }
+
+        res.json(result[0]);
+
+    });
+
+};
 
 const updatePhone = (req, res) => {
 
@@ -152,6 +169,7 @@ module.exports = {
 
     login,
     getPhones,
+    getPhoneById,
     addPhone,
     updatePhone,
     deletePhone

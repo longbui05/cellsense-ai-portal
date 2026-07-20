@@ -8,22 +8,89 @@ function PhoneDetail() {
 
     const [phone, setPhone] = useState(null);
 
-    useEffect(() => {
+    const [reviews, setReviews] = useState([]);
 
-        axios
-            .get(`http://localhost:5000/api/phones/${id}`)
-            .then((res) => {
+    const [rating, setRating] = useState(5);
 
-                setPhone(res.data);
+    const [comment, setComment] = useState("");
+   useEffect(() => {
 
-            })
-            .catch((err) => {
+    axios
+        .get(`http://localhost:5000/api/phones/${id}`)
+        .then((res) => {
 
-                console.log(err);
+            setPhone(res.data);
 
-            });
+        })
+        .catch((err) => {
 
-    }, [id]);
+            console.log(err);
+
+        });
+
+    axios
+        .get(`http://localhost:5000/api/reviews/${id}`)
+        .then((res) => {
+
+            setReviews(res.data);
+
+        })
+        .catch((err) => {
+
+            console.log(err);
+
+        });
+
+}, [id]);
+    const handleReview = () => {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+
+        alert("Vui lòng đăng nhập");
+
+        return;
+
+    }
+
+    axios.post(
+
+        "http://localhost:5000/api/reviews",
+
+        {
+
+            user_id: user.id,
+
+            phone_id: phone.id,
+
+            rating,
+
+            comment
+
+        }
+
+    ).then(() => {
+
+        alert("Đánh giá thành công");
+
+        setComment("");
+
+        return axios.get(
+            `http://localhost:5000/api/reviews/${phone.id}`
+        );
+
+    }).then((res) => {
+
+        setReviews(res.data);
+
+    }).catch((err) => {
+
+        console.log(err);
+
+    });
+
+};
 
     if (!phone) {
 
@@ -89,8 +156,109 @@ function PhoneDetail() {
                 </div>
 
             </div>
+            <hr className="mt-5" />
+
+<h3>Đánh giá</h3>
+
+<div className="mb-3">
+
+    <label>Số sao</label>
+
+    <select
+
+        className="form-control"
+
+        value={rating}
+
+        onChange={(e) => setRating(e.target.value)}
+
+    >
+
+        <option value="5">★★★★★</option>
+
+        <option value="4">★★★★☆</option>
+
+        <option value="3">★★★☆☆</option>
+
+        <option value="2">★★☆☆☆</option>
+
+        <option value="1">★☆☆☆☆</option>
+
+    </select>
+
+</div>
+
+<div className="mb-3">
+
+    <textarea
+
+        className="form-control"
+
+        rows="4"
+
+        placeholder="Viết đánh giá..."
+
+        value={comment}
+
+        onChange={(e) => setComment(e.target.value)}
+
+    />
+
+</div>
+
+<button
+
+    className="btn btn-primary"
+
+    onClick={handleReview}
+
+>
+
+    Gửi đánh giá
+
+</button>
+
+<hr />
+
+{
+    reviews.map((review) => (
+
+        <div
+
+            className="card mb-3"
+
+            key={review.id}
+
+        >
+
+            <div className="card-body">
+
+                <h5>
+
+                    {review.full_name}
+
+                </h5>
+
+                <p>
+
+                    {"★".repeat(review.rating)}
+
+                </p>
+
+                <p>
+
+                    {review.comment}
+
+                </p>
+
+            </div>
 
         </div>
+
+    ))
+}
+        </div>
+        
 
     );
 

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function PhoneCard({ phone }) {
    const [liked, setLiked] = useState(false);  
@@ -11,7 +12,12 @@ function PhoneCard({ phone }) {
 
   if (comparePhones.find((item) => item.id === phone.id)) {
 
-    alert("Điện thoại này đã được chọn.");
+    Swal.fire({
+    icon: "info",
+    title: "Already Added",
+    text: "This phone is already in Compare.",
+    confirmButtonColor: "#2563EB"
+});
 
     return;
 
@@ -19,7 +25,12 @@ function PhoneCard({ phone }) {
 
   if (comparePhones.length >= 2) {
 
-    alert("Chỉ được chọn tối đa 2 điện thoại.");
+    Swal.fire({
+    icon: "warning",
+    title: "Compare Full",
+    text: "You can only compare 2 phones.",
+    confirmButtonColor: "#2563EB"
+});
 
     return;
 
@@ -32,7 +43,13 @@ function PhoneCard({ phone }) {
     JSON.stringify(comparePhones)
   );
 
-  alert("Đã thêm vào danh sách so sánh.");
+  Swal.fire({
+    icon: "success",
+    title: "Success!",
+    text: "Phone added to Compare.",
+    timer: 1500,
+    showConfirmButton: false
+});
 
 };
 const handleFavorite = () => {
@@ -41,7 +58,12 @@ const handleFavorite = () => {
 
     if (!user) {
 
-        alert("Vui lòng đăng nhập.");
+        Swal.fire({
+    icon: "warning",
+    title: "Login Required",
+    text: "Please login first.",
+    confirmButtonColor: "#2563EB"
+});
 
         return;
 
@@ -62,7 +84,13 @@ const handleFavorite = () => {
     )
     .then((res) => {
 
-        alert(res.data.message);
+        Swal.fire({
+    icon: "success",
+    title: "Added!",
+    text: res.data.message,
+    timer: 1500,
+    showConfirmButton: false
+});
 
         setLiked(true);
 

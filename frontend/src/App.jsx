@@ -11,25 +11,90 @@ import EditPhone from "./pages/EditPhone";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Favorite from "./pages/Favorite";
+import AIChat from "./pages/AIChat";
+
 
 function Home() {
   const [phones, setPhones] = useState([]);
+  const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("All");
-
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [ram, setRam] = useState([]);
+const [storage, setStorage] = useState([]);
+const [showRam, setShowRam] = useState(false);
+const [showStorage, setShowStorage] = useState(false);
+  const [sort, setSort] = useState("newest");
+  const [page, setPage] = useState(1);
+  const limit = 8;
+  
   const user = JSON.parse(localStorage.getItem("user"));
+  
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/phones")
-      .then((res) => {
-        setPhones(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
+    axios.get("http://localhost:5000/api/phones", {
+        params: {
+
+    search,
+
+    brand: brand === "All" ? "" : brand,
+
+    minPrice,
+
+    maxPrice,
+
+    ram: ram.join(","),
+
+    storage: storage.join(","),
+            sort,
+            limit,
+
+offset: (page - 1) * limit
+        }
+    })
+.then(res=>{
+
+    setPhones(res.data.phones);
+
+    setTotal(res.data.total);
+
+})
+
+.catch(err=>console.log(err));
+
+}, [
+    search,
+    brand,
+    minPrice,
+    maxPrice,
+    ram,
+    storage,
+    sort,
+    page
+]);
+useEffect(() => {
+
+    setPage(1);
+
+}, [
+
+    search,
+
+    brand,
+
+    minPrice,
+
+    maxPrice,
+
+    ram,
+
+    storage,
+
+    sort
+
+]);
   const filteredPhones = phones.filter((phone) => {
     
     const matchSearch = phone.model
@@ -47,6 +112,34 @@ function Home() {
     localStorage.removeItem("user");
 
     window.location.reload();
+
+};
+
+const handleRam = (value) => {
+
+    if (ram.includes(value)) {
+
+        setRam(ram.filter(item => item !== value));
+
+    } else {
+
+        setRam([...ram, value]);
+
+    }
+
+};
+
+const handleStorage = (value) => {
+
+    if (storage.includes(value)) {
+
+        setStorage(storage.filter(item => item !== value));
+
+    } else {
+
+        setStorage([...storage, value]);
+
+    }
 
 };
   
@@ -166,23 +259,27 @@ function Home() {
             comparison and reviews.
         </p>
 
-        <div className="mt-4">
-
-            <a
-                href="#phones"
-                className="btn btn-warning btn-lg me-3"
-            >
-                Explore Phones
-            </a>
-
-            <button
-    className="btn btn-light btn-lg"
-    onClick={() => alert("AI Assistant sẽ được cập nhật ở phiên bản tiếp theo.")}
+<div
+    className="d-flex justify-content-center align-items-center gap-3 mt-5 flex-wrap"
 >
-    🤖 AI Assistant
-</button>
 
-        </div>
+    <a
+        href="#phones"
+        className="btn btn-warning btn-lg px-4"
+    >
+        📱 Explore Phones
+    </a>
+
+    <Link
+        to="/ai"
+        className="btn btn-light btn-lg px-4"
+    >
+        🤖 AI Chat
+    </Link>
+
+    
+
+</div>
 
     </div>
 
@@ -195,7 +292,7 @@ function Home() {
 >
 
         <div className="mb-4">
-</div>
+
           <input
     type="text"
     className="form-control shadow-sm"
@@ -208,30 +305,156 @@ function Home() {
         fontSize: "18px"
     }}
 />
+</div>
 
-        <div className="row mb-5">
 
-    <div className="col-md-4">
+        <div className="row g-3 mb-5">
 
+    <div className="col-md-3">
         <select
             className="form-select"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
-            style={{
-                height: "55px",
-                borderRadius: "15px",
-                border: "none",
-                boxShadow: "0 8px 25px rgba(0,0,0,.08)"
-            }}
         >
             <option value="All">All Brands</option>
             <option value="Apple">Apple</option>
             <option value="Samsung">Samsung</option>
             <option value="Xiaomi">Xiaomi</option>
         </select>
+    </div>
+    <div className="col-md-2 position-relative">
 
+<button
+className="btn btn-outline-secondary w-100"
+onClick={() => setShowRam(!showRam)}
+>
+
+RAM ▼
+
+</button>
+
+{
+showRam && (
+
+<div
+className="position-absolute bg-white border rounded shadow p-3 mt-2"
+style={{
+width:"230px",
+zIndex:1000
+}}
+>
+
+<div className="d-flex flex-wrap gap-2">
+
+<button
+className={`btn ${ram.includes("8GB") ? "btn-primary" : "btn-outline-primary"}`}
+onClick={()=>handleRam("8GB")}
+>
+8GB
+</button>
+
+<button
+className={`btn ${ram.includes("12GB") ? "btn-primary" : "btn-outline-primary"}`}
+onClick={()=>handleRam("12GB")}
+>
+12GB
+</button>
+
+<button
+className={`btn ${ram.includes("16GB") ? "btn-primary" : "btn-outline-primary"}`}
+onClick={()=>handleRam("16GB")}
+>
+16GB
+</button>
+
+</div>
+
+</div>
+
+)
+
+}
+
+</div>
+
+    <div className="col-md-2">
+        <input
+            type="number"
+            className="form-control"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+        />
     </div>
 
+    <div className="col-md-2">
+        <input
+            type="number"
+            className="form-control"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+        />
+    </div>
+
+    
+<div className="col-md-2 position-relative">
+
+<button
+className="btn btn-outline-secondary w-100"
+onClick={() => setShowStorage(!showStorage)}
+>
+
+Storage ▼
+
+</button>
+
+{
+showStorage && (
+
+<div
+className="position-absolute bg-white border rounded shadow p-3 mt-2"
+style={{
+width:"230px",
+zIndex:1000
+}}
+>
+
+<div className="d-flex flex-wrap gap-2">
+
+<button
+className={`btn ${storage.includes("128GB") ? "btn-primary" : "btn-outline-primary"}`}
+onClick={()=>handleStorage("128GB")}
+>
+128GB
+</button>
+
+<button
+className={`btn ${storage.includes("256GB") ? "btn-primary" : "btn-outline-primary"}`}
+onClick={()=>handleStorage("256GB")}
+>
+256GB
+</button>
+
+<button
+className={`btn ${storage.includes("512GB") ? "btn-primary" : "btn-outline-primary"}`}
+onClick={()=>handleStorage("512GB")}
+>
+512GB
+</button>
+
+
+</div>
+
+</div>
+
+)
+
+}
+
+</div>
+
+   
 </div>
 <div className="mb-4">
 
@@ -256,7 +479,7 @@ function Home() {
 </div>
         <div className="row g-4">
 
-          {filteredPhones.map((phone) => (
+          {phones.map((phone) => (
             <PhoneCard
             key={phone.id}
             phone={phone}
@@ -264,6 +487,43 @@ function Home() {
           ))}
 
         </div>
+        <div className="d-flex justify-content-center align-items-center mt-5">
+
+    <button
+
+        className="btn btn-outline-primary me-3"
+
+        disabled={page === 1}
+
+        onClick={() => setPage(page - 1)}
+
+    >
+
+        ← Previous
+
+    </button>
+
+    <span className="fw-bold">
+
+        Page {page}
+
+    </span>
+
+    <button
+
+        className="btn btn-outline-primary ms-3"
+
+        disabled={phones.length < limit}
+
+        onClick={() => setPage(page + 1)}
+
+    >
+
+        Next →
+
+    </button>
+
+</div>
 
       </div>
     </div>
@@ -319,6 +579,11 @@ function App() {
     path="/favorite"
     element={<Favorite />}
 />
+<Route
+    path="/ai"
+    element={<AIChat />}
+/>
+
 
     </Routes>
   );

@@ -2,21 +2,62 @@ const Phone = require("../models/phoneModel");
 
 const getPhones = (req, res) => {
 
-    Phone.getAllPhones((err, result) => {
+    const {
+
+        limit = 20,
+
+        offset = 0,
+
+        search,
+
+        brand,
+
+        minPrice,
+
+        maxPrice,
+
+        ram,
+
+        storage,
+
+        sort
+
+    } = req.query;
+
+    Phone.getAllPhones(
+    {
+        limit,
+        offset,
+        search,
+        brand,
+        minPrice,
+        maxPrice,
+        ram,
+        storage,
+        sort
+    },
+    (err, result) => {
+
+        console.log("CALLBACK MODEL");
 
         if (err) {
-
             console.log(err);
-
             return res.status(500).json({
                 message: "Database Error"
             });
-
         }
 
-        res.json(result);
+        console.log("SEND RESPONSE");
 
-    });
+        res.json({
+
+    phones: result.phones,
+
+    total: result.total
+
+});
+    }
+);
 
 };
 

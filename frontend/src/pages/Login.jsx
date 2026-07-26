@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Login() {
 
@@ -10,6 +11,29 @@ function Login() {
     const navigate = useNavigate();
 
     const handleLogin = () => {
+        if (!email.trim()) {
+
+    Swal.fire({
+    icon: "warning",
+    title: "Missing Information",
+    text: "Please enter your email."
+});
+
+    return;
+
+}
+
+if (!password.trim()) {
+
+Swal.fire({
+    icon: "warning",
+    title: "Missing Information",
+    text: "Please enter your password."
+});
+
+    return;
+
+}
 
         axios.post(
             "http://localhost:5000/api/auth/login",
@@ -25,14 +49,28 @@ function Login() {
                 JSON.stringify(res.data.user)
             );
 
-            alert(res.data.message);
+            Swal.fire({
+    icon: "success",
+    title: "Login Successful",
+    text: "Welcome back!",
+    timer: 1500,
+    showConfirmButton: false
+});
 
-            navigate("/");
+setTimeout(() => {
+
+    navigate("/");
+
+}, 1500);
 
         })
         .catch((err) => {
 
-            alert(err.response.data.message);
+            Swal.fire({
+    icon: "error",
+    title: "Login Failed",
+    text: err.response?.data?.message || "Invalid email or password."
+});
 
         });
 
@@ -68,7 +106,7 @@ function Login() {
                 </h2>
 
                 <p className="text-center text-muted mb-4">
-                    Đăng nhập để tiếp tục
+                    Sign in to continue
                 </p>
 
                 <input
@@ -81,7 +119,7 @@ function Login() {
                 <input
                     type="password"
                     className="form-control mb-3"
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
@@ -90,20 +128,20 @@ function Login() {
                     className="btn btn-primary w-100"
                     onClick={handleLogin}
                 >
-                    Đăng nhập
+                    Sign In
                 </button>
 
                 <hr />
 
                 <div className="text-center">
 
-                    Chưa có tài khoản?
+                    Don't have an account?
 
                     <Link
                         to="/register"
                         className="ms-2 text-decoration-none"
                     >
-                        Đăng ký
+                       Sign Up
                     </Link>
 
                 </div>

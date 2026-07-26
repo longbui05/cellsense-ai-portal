@@ -10,8 +10,10 @@ const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 const app = express();
+
 
 app.use(cors());
 
@@ -26,6 +28,7 @@ app.use("/api/auth", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req,res)=>{
 

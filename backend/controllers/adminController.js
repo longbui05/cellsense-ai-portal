@@ -38,17 +38,27 @@ const login = (req, res) => {
 };
 const getPhones = (req, res) => {
 
-    Phone.getAllPhones((err, result) => {
+    Phone.getAllPhones(
+    {
+        limit: 20,
+        offset: 0
+    },
+    (err, result) => {
 
         if (err) {
-
             return res.status(500).json(err);
-
         }
 
-        res.json(result);
+        res.json({
 
-    });
+    phones: result.phones,
+
+    total: result.total
+
+});
+
+    }
+);
 
 };
 const addPhone = (req, res) => {

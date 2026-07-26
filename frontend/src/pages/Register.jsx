@@ -2,6 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 function Register() {
@@ -14,11 +15,89 @@ function Register() {
     const navigate = useNavigate();
 
     const handleRegister = () => {
-        if(password !== confirmPassword){
 
-    alert("Mật khẩu không khớp");
+    if (!fullName.trim()) {
 
-    return;
+        Swal.fire({
+    icon: "warning",
+    title: "missing information",
+    text: "Please enter your full name"
+});
+
+        return;
+
+    }
+
+    if (!email.trim()) {
+
+        Swal.fire({
+    icon: "warning",
+    title: "missing information",
+    text: "Please enter your email"
+});
+
+        return;
+
+    }
+
+    if (!password.trim()) {
+
+        Swal.fire({
+    icon: "warning",
+    title: "missing information",
+    text: "Please enter your password"
+});
+
+        return;
+
+    }
+
+    if (!confirmPassword.trim()) {
+
+        Swal.fire({
+    icon: "warning",
+    title: "missing information",
+    text: "Please confirm your password"
+});
+
+        return;
+
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+
+        Swal.fire({
+    icon: "error",
+    title: "Email invalid",
+    text: "Invalid email address"
+});
+
+        return;
+
+    }
+
+    if (password.length < 6) {
+
+        Swal.fire({
+    icon: "warning",
+    title: "Password invalid",
+    text: "Password must be at least 6 characters"
+});
+
+        return;
+
+    }
+
+    if (password !== confirmPassword) {
+
+       Swal.fire({
+    icon: "error",
+    title: "Wrong password",
+    text: "Passwords do not match"
+});
+        return;
 
 }
 
@@ -32,26 +111,42 @@ function Register() {
         )
         .then((res) => {
 
-            alert(res.data.message);
+           Swal.fire({
+    icon: "success",
+    title: "Successful",
+    text: "Registration Successful",
+    confirmButtonColor: "#2563EB"
+}).then(() => {
 
-            navigate("/login");
+    navigate("/login");
+
+});
 
         })
         .catch((err) => {
 
             if (err.response) {
 
-                alert(err.response.data.message);
+                Swal.fire({
+    icon: "error",
+    title: "Registration Failed",
+    text: "This email is already registered."
+});
 
             } else {
 
-                alert("Đăng ký thất bại");
+                Swal.fire({
+    icon: "error",
+    title: "Server Error",
+    text: "Something went wrong. Please try again later"
+});
 
             }
 
         });
 
     };
+   
 
     return (
 
@@ -81,12 +176,12 @@ function Register() {
                 </h2>
 
                 <p className="text-center text-muted mb-4">
-                    Tạo tài khoản mới
+                    Create a New Account
                 </p>
 
                 <input
                     className="form-control mb-3"
-                    placeholder="Họ và tên"
+                    placeholder="Full Name"
                     value={fullName}
                     onChange={(e)=>setFullName(e.target.value)}
                 />
@@ -101,7 +196,7 @@ function Register() {
                 <input
                     type="password"
                     className="form-control mb-3"
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
                     value={password}
                     onChange={(e)=>setPassword(e.target.value)}
                 />
@@ -109,7 +204,7 @@ function Register() {
                 <input
                     type="password"
                     className="form-control mb-3"
-                    placeholder="Xác nhận mật khẩu"
+                    placeholder="Confirm Password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
@@ -118,20 +213,20 @@ function Register() {
                     className="btn btn-primary w-100"
                     onClick={handleRegister}
                 >
-                    Đăng ký
+                    Sign Up
                 </button>
 
                 <hr/>
 
                 <div className="text-center">
 
-                    Đã có tài khoản?
+                   Already have an account?
 
                     <Link
                         to="/login"
                         className="ms-2 text-decoration-none"
                     >
-                        Đăng nhập
+                        Sign In
                     </Link>
 
                 </div>

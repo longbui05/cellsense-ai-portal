@@ -15,9 +15,9 @@ function Admin() {
         .get("http://localhost:5000/api/admin/phones")
         .then((res) => {
 
-            setPhones(res.data);
+    setPhones(res.data.phones);
 
-        });
+});
 
     }, []);
 
